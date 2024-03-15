@@ -15,7 +15,7 @@ const httpInterceptor: UniApp.InterceptorOptions = {
     // 3. 添加小程序端请求头标识
     options.header = {
       'source-client': 'miniapp',
-      ...options.header,
+      ...options.header
     }
     // 4. 添加 token 请求头标识
     const memberStore = useMemberStore()
@@ -23,7 +23,7 @@ const httpInterceptor: UniApp.InterceptorOptions = {
     if (token) {
       options.header.Authorization = token
     }
-  },
+  }
 }
 
 // 拦截 request 请求
@@ -51,7 +51,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 其他错误
           uni.showToast({
             title: (res.data as PublicResponse<T>).msg || '请求失败，请稍后重试',
-            icon: 'none',
+            icon: 'none'
           })
           reject(res)
         }
@@ -60,10 +60,10 @@ export const http = <T>(options: UniApp.RequestOptions) => {
       fail: (err) => {
         uni.showToast({
           title: '请求失败，请稍后重试',
-          icon: 'none',
+          icon: 'none'
         })
         reject(err)
-      },
+      }
     })
   })
 }

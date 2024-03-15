@@ -22,7 +22,7 @@ export const useMemberStore = defineStore(
     return {
       profile,
       setProfile,
-      clearProfile,
+      clearProfile
     }
   },
   {
@@ -33,8 +33,8 @@ export const useMemberStore = defineStore(
         },
         getItem: (key: string) => {
           return uni.getStorageSync(key)
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 )

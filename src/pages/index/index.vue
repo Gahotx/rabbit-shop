@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '@/services/home'
+import type { XtxGuessInstance } from '@/types/components'
 import { onLoad } from '@dcloudio/uni-app'
 import CategoryPanel from './components/CategoryPanel.vue'
 import CustomNavbar from './components/CustomNavbar.vue'
@@ -27,6 +28,25 @@ const getHomeHotList = async () => {
   hotList.value = res.result
 }
 
+// 下拉刷新
+const guessRef = ref<XtxGuessInstance>()
+const isTriggered = ref(false)
+const handleRefresPage = async () => {
+  isTriggered.value = true
+  guessRef.value?.resetData()
+  await Promise.all([
+    getHomeBannerList(),
+    getHomeCategoryList(),
+    getHomeHotList(),
+    handleLoadMoreData()
+  ])
+  isTriggered.value = false
+}
+// 触底加载更多
+const handleLoadMoreData = () => {
+  guessRef.value?.getMoreData()
+}
+
 onLoad(() => {
   getHomeBannerList()
   getHomeCategoryList()
@@ -36,10 +56,19 @@ onLoad(() => {
 
 <template>
   <CustomNavbar />
-  <XtxSwiper :list="bannerList" />
-  <CategoryPanel :list="categoryList" />
-  <HotPanel :list="hotList" />
-  <view class="index">index</view>
+  <scroll-view
+    refresher-enabled
+    @refresherrefresh="handleRefresPage"
+    @scrolltolower="handleLoadMoreData"
+    :refresher-triggered="isTriggered"
+    class="scroll-view"
+    scroll-y
+  >
+    <XtxSwiper :list="bannerList" />
+    <CategoryPanel :list="categoryList" />
+    <HotPanel :list="hotList" />
+    <XtxGuess ref="guessRef" />
+  </scroll-view>
 </template>
 
 <style lang="scss">

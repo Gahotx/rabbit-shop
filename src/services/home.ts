@@ -33,3 +33,16 @@ export function getHomeHotAPI() {
     url: '/home/hot/mutli'
   })
 }
+
+/**
+ * 猜你喜欢-小程序
+ * @param page 页码
+ * @param pageSize 页大小
+ */
+export function getHomeGuessAPI(data?: PageParams) {
+  return http<PageResult<GuessItem>>({
+    method: 'GET',
+    url: '/home/goods/guessLike',
+    data
+  })
+}

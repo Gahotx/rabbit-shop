@@ -36,7 +36,7 @@ const handleChangeCategory = (id: string) => {
     scrollTop.value = 0
   })
 }
-const handleScrollContent = (e: any) => {
+const handleScrollContent: UniHelper.ScrollViewOnScroll = (e) => {
   defaultScrollTop.value = e.detail.scrollTop
 }
 

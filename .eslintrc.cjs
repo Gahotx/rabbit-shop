@@ -40,7 +40,6 @@ module.exports = {
     'vue/multi-word-component-names': ['off'],
     'vue/no-setup-props-destructure': ['off'],
     'vue/no-deprecated-html-element-is': ['off'],
-    '@typescript-eslint/no-unused-vars': ['off'],
-    'no-undef': 'off'
+    '@typescript-eslint/no-unused-vars': ['off']
   }
 }

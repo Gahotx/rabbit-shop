@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { getHotRecommendAPI } from '@/services/hot'
 import { onLoad } from '@dcloudio/uni-app'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 热门推荐页 标题和url
 const hotMap = [
@@ -54,13 +55,17 @@ const handleLoadMoreData = async () => {
   }
 }
 
-onLoad(() => {
-  getHotRecommendList()
+const isLoading = ref(false)
+onLoad(async () => {
+  isLoading.value = true
+  await getHotRecommendList()
+  isLoading.value = false
 })
 </script>
 
 <template>
-  <view class="viewport">
+  <PageSkeleton v-if="isLoading" />
+  <view class="viewport" v-else>
     <!-- 推荐封面图 -->
     <view class="cover">
       <image :src="bannerImg"></image>

@@ -40,7 +40,7 @@ export function getHomeHotAPI() {
  * @param pageSize 页大小
  */
 export function getHomeGuessAPI(data?: PageParams) {
-  return http<PageResult<GuessItem>>({
+  return http<PageResult<GoodsItem>>({
     method: 'GET',
     url: '/home/goods/guessLike',
     data

@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { getHomeGuessAPI } from '@/services/home'
 
 const isFinish = ref(false)
-const guessList = ref<GuessItem[]>([])
+const guessList = ref<GoodsItem[]>([])
 const pageParams: Required<PageParams> = {
   page: 1,
   pageSize: 10
@@ -61,7 +61,7 @@ onMounted(() => {
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> {{ isFinish ? '没有更多数据~' : '正在加载...' }} </view>
+  <view class="loading-text"> {{ isFinish ? '没有更多数据了~' : '正在加载...' }} </view>
 </template>
 
 <style lang="scss">

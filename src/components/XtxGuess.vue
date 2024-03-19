@@ -3,11 +3,12 @@ import { onMounted, ref } from 'vue'
 import { getHomeGuessAPI } from '@/services/home'
 
 const isFinish = ref(false)
+const guessList = ref<GuessItem[]>([])
 const pageParams: Required<PageParams> = {
   page: 1,
   pageSize: 10
 }
-const guessList = ref<GuessItem[]>([])
+
 const getGuessList = async () => {
   if (isFinish.value) {
     return uni.showToast({
@@ -23,6 +24,7 @@ const getGuessList = async () => {
     isFinish.value = true
   }
 }
+
 const resetData = () => {
   pageParams.page = 1
   guessList.value = []

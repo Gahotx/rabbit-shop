@@ -6,6 +6,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import CategoryPanel from './components/CategoryPanel.vue'
 import CustomNavbar from './components/CustomNavbar.vue'
 import HotPanel from './components/HotPanel.vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 获取首页轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -47,10 +48,11 @@ const handleLoadMoreData = () => {
   guessRef.value?.getMoreData()
 }
 
-onLoad(() => {
-  getHomeBannerList()
-  getHomeCategoryList()
-  getHomeHotList()
+const isLoading = ref(false)
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getHomeBannerList(), getHomeCategoryList(), getHomeHotList()])
+  isLoading.value = false
 })
 </script>
 
@@ -64,10 +66,13 @@ onLoad(() => {
     class="scroll-view"
     scroll-y
   >
-    <XtxSwiper :list="bannerList" />
-    <CategoryPanel :list="categoryList" />
-    <HotPanel :list="hotList" />
-    <XtxGuess ref="guessRef" />
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <XtxSwiper :list="bannerList" />
+      <CategoryPanel :list="categoryList" />
+      <HotPanel :list="hotList" />
+      <XtxGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 

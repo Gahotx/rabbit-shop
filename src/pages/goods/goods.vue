@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { getGoodsDetailAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import AddressPanel from './components/AddressPanel.vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 import ServicePanel from './components/ServicePanel.vue'
 
 // 获取屏幕边界到安全区域距离
@@ -22,7 +23,6 @@ const getGoodsDetail = async () => {
   const res = await getGoodsDetailAPI(query.id)
   goodsInfo.value = res.result
   imgList.value = res.result.mainPictures
-  console.log(res)
 }
 const handleChangeSwiper: UniHelper.SwiperOnChange = (e) => {
   activeIndex.value = e.detail.current
@@ -48,13 +48,17 @@ const openPopup = (name: typeof popupName.value) => {
   popup.value?.open()
 }
 
-onLoad(() => {
-  getGoodsDetail()
+const isLoading = ref(false)
+onLoad(async () => {
+  isLoading.value = true
+  await getGoodsDetail()
+  isLoading.value = false
 })
 </script>
 
 <template>
-  <scroll-view scroll-y class="viewport">
+  <PageSkeleton v-if="isLoading" />
+  <scroll-view scroll-y class="viewport" v-else>
     <!-- 基本信息 -->
     <view class="goods">
       <!-- 商品主图 -->

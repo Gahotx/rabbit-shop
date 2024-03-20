@@ -45,7 +45,15 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 401 未授权，跳转到登录页
           const memberStore = useMemberStore()
           memberStore.clearProfile()
-          uni.navigateTo({ url: '/pages/login/login' })
+          uni.showToast({
+            title: (res.data as PublicResponse<T>).msg || '身份过期，请重新登录',
+            icon: 'none',
+            success: () => {
+              setTimeout(() => {
+                uni.navigateTo({ url: '/pages/login/login' })
+              }, 500)
+            }
+          })
           reject(res)
         } else {
           // 其他错误

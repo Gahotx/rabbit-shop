@@ -51,7 +51,7 @@ interface simpleLoginReq {
   password: string
 }
 
-interface simpleLoginRes {
+interface SimpleLoginRes {
   /**
    * 用户名
    */

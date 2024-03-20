@@ -33,7 +33,7 @@ export function wxLoginBetaAPI(phoneNumber: string) {
  * @param password 密码 123456
  */
 export function simpleLoginAPI(data: simpleLoginReq) {
-  return http<simpleLoginRes>({
+  return http<SimpleLoginRes>({
     method: 'POST',
     url: '/login',
     data

@@ -1,6 +1,10 @@
 // src/pages/goods/goods.vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import type {
+  SkuPopupInstance,
+  SkuPopupLocaldata
+} from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { getGoodsDetailAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import AddressPanel from './components/AddressPanel.vue'
@@ -18,11 +22,28 @@ const query = defineProps<{
 // 获取商品详情
 const activeIndex = ref(0) // 当前轮播图索引
 const imgList = ref<string[]>([]) // 商品轮播图片列表
+const localdata = ref({} as SkuPopupLocaldata)
 const goodsInfo = ref<GetGoodsDetailRes>() // 商品详情信息
 const getGoodsDetail = async () => {
   const res = await getGoodsDetailAPI(query.id)
   goodsInfo.value = res.result
   imgList.value = res.result.mainPictures
+  // SKU组件所需格式
+  localdata.value = {
+    _id: res.result.id,
+    name: res.result.name,
+    goods_thumb: res.result.mainPictures[0],
+    spec_list: res.result.specs.map((v) => ({ name: v.name, list: v.values })),
+    sku_list: res.result.skus.map((v) => ({
+      _id: v.id,
+      goods_id: res.result.id,
+      goods_name: res.result.name,
+      image: v.picture,
+      price: v.price * 100, // 注意：需要乘以 100
+      stock: v.inventory,
+      sku_name_arr: v.specs.map((vv) => vv.valueName)
+    }))
+  }
 }
 const handleChangeSwiper: UniHelper.SwiperOnChange = (e) => {
   activeIndex.value = e.detail.current
@@ -47,6 +68,26 @@ const openPopup = (name: typeof popupName.value) => {
   // 打开弹出层
   popup.value?.open()
 }
+
+// 打开SKU弹窗
+const isShowSku = ref(false) // 是否显示SKU弹窗
+// 按钮模式
+enum SkuMode {
+  Both = 1,
+  Cart = 2,
+  Buy = 3
+}
+const skuMode = ref<SkuMode>(SkuMode.Cart)
+const handleOpenSku = (mode: SkuMode) => {
+  isShowSku.value = true
+  skuMode.value = mode
+}
+// SKU组件实例
+const skuPopupRef = ref<SkuPopupInstance>()
+// 计算被选中的值
+const selectArrText = computed(() => {
+  return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
+})
 
 const isLoading = ref(false)
 onLoad(async () => {
@@ -89,7 +130,9 @@ onLoad(async () => {
       <view class="action">
         <view class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis"> 请选择商品规格 </text>
+          <text class="text ellipsis" @tap="handleOpenSku(SkuMode.Both)">
+            {{ selectArrText }}
+          </text>
         </view>
         <view @tap="openPopup('address')" class="item arrow">
           <text class="label">送至</text>
@@ -166,10 +209,25 @@ onLoad(async () => {
       </navigator>
     </view>
     <view class="buttons">
-      <view class="addcart"> 加入购物车 </view>
-      <view class="buynow"> 立即购买 </view>
+      <view class="addcart" @tap="handleOpenSku(SkuMode.Cart)"> 加入购物车 </view>
+      <view class="buynow" @tap="handleOpenSku(SkuMode.Buy)"> 立即购买 </view>
     </view>
   </view>
+
+  <!-- SKU弹窗组件 -->
+  <vk-data-goods-sku-popup
+    v-model="isShowSku"
+    :localdata="localdata"
+    :mode="skuMode"
+    add-cart-background-color="#FFA868"
+    buy-now-background-color="#27BA9B"
+    ref="skuPopupRef"
+    :actived-style="{
+      color: '#27BA9B',
+      borderColor: '#27BA9B',
+      backgroundColor: '#E9F8F5'
+    }"
+  />
 </template>
 
 <style lang="scss">

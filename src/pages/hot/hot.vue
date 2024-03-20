@@ -49,7 +49,7 @@ const handleLoadMoreData = async () => {
   } else {
     currentSubType!.isFinish = true
     return uni.showToast({
-      title: '没有更多数据~',
+      title: '没有更多数据了~',
       icon: 'none'
     })
   }

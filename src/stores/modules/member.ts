@@ -1,15 +1,15 @@
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { defineStore } from 'pinia'
 
 // 定义 Store
 export const useMemberStore = defineStore(
   'member',
   () => {
     // 会员信息
-    const profile = ref<any>()
+    const profile = ref<wxLoginRes>()
 
     // 保存会员信息，登录时使用
-    const setProfile = (val: any) => {
+    const setProfile = (val: wxLoginRes) => {
       profile.value = val
     }
 

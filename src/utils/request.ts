@@ -46,7 +46,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           const memberStore = useMemberStore()
           memberStore.clearProfile()
           uni.showToast({
-            title: (res.data as PublicResponse<T>).msg || '身份过期，请重新登录',
+            title: '身份过期，请重新登录',
             icon: 'none',
             success: () => {
               setTimeout(() => {

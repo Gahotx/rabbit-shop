@@ -2,9 +2,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type {
+  SkuPopupEvent,
   SkuPopupInstance,
   SkuPopupLocaldata
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import { addCartAPI } from '@/services/cart'
 import { getGoodsDetailAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import AddressPanel from './components/AddressPanel.vue'
@@ -88,6 +90,19 @@ const skuPopupRef = ref<SkuPopupInstance>()
 const selectArrText = computed(() => {
   return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
 })
+
+// 添加购物车
+const handleAddCart = async (e: SkuPopupEvent) => {
+  await addCartAPI({
+    skuId: e._id,
+    count: e.buy_num
+  })
+  uni.showToast({
+    title: '添加成功',
+    icon: 'success'
+  })
+  isShowSku.value = false
+}
 
 const isLoading = ref(false)
 onLoad(async () => {
@@ -204,7 +219,7 @@ onLoad(async () => {
       <button class="icons-button" open-type="contact">
         <text class="icon-handset"></text>客服
       </button>
-      <navigator class="icons-button" url="/pages/cart/cart" open-type="switchTab">
+      <navigator class="icons-button" url="/pages/cart/cartPage">
         <text class="icon-cart"></text>购物车
       </navigator>
     </view>
@@ -219,6 +234,7 @@ onLoad(async () => {
     v-model="isShowSku"
     :localdata="localdata"
     :mode="skuMode"
+    @add-cart="handleAddCart"
     add-cart-background-color="#FFA868"
     buy-now-background-color="#27BA9B"
     ref="skuPopupRef"

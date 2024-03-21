@@ -104,6 +104,13 @@ const handleAddCart = async (e: SkuPopupEvent) => {
   isShowSku.value = false
 }
 
+// 立即购买
+const handleBuyNow = (e: SkuPopupEvent) => {
+  uni.navigateTo({
+    url: `/pagesOrder/create/create?skuId=${e._id}&count=${e.buy_num}`
+  })
+}
+
 const isLoading = ref(false)
 onLoad(async () => {
   isLoading.value = true
@@ -235,6 +242,7 @@ onLoad(async () => {
     :localdata="localdata"
     :mode="skuMode"
     @add-cart="handleAddCart"
+    @buy-now="handleBuyNow"
     add-cart-background-color="#FFA868"
     buy-now-background-color="#27BA9B"
     ref="skuPopupRef"

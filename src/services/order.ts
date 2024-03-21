@@ -31,3 +31,13 @@ export function submitOrderAPI(data: SubmitOrderReq) {
     data
   })
 }
+
+/**
+ * 获取订单详情
+ */
+export function getOrderDetailAPI(id: string) {
+  return http<GetOrderDetailRes>({
+    method: 'GET',
+    url: `/member/order/${id}`
+  })
+}
